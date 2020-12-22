@@ -1,7 +1,7 @@
 name: flutter_google_message_api
-description: A new flutter plugin project.
-version: 0.0.1
-author:
+description: A plugin that allows you to use google messageApi easily for a two-way communication between a device with android wear and the phone.
+version: 0.0.2
+author: Gr3goryWolf
 homepage:
 
 environment:
