@@ -22,10 +22,24 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
   }
 
+  FlutterGoogleMessageApi _msgApi = FlutterGoogleMessageApi();
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> initPlatformState() async {
     String platformVersion;
-    FlutterGoogleMessageApi.init();
+    _msgApi.init();
+    _msgApi.onConnected = () {
+      print("Connected");
+    };
+    _msgApi.onInit = () {
+      print("Initialized");
+    };
+    _msgApi.onMessage = (String msg) {
+      print("New message: $msg");
+    };
+    _msgApi.onSuspended = () {
+      print("Suspended");
+    };
+
     // Platform messages may fail, so we use a try/catch PlatformException.
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -48,10 +62,7 @@ class _MyAppState extends State<MyApp> {
         body: Center(
           child: FlatButton(
             child: Text("Send message"),
-            onPressed: () =>
-                {
-                  FlutterGoogleMessageApi.sendMessage("Test message")
-                },
+            onPressed: () => {_msgApi.sendMessage("Test message")},
           ),
         ),
       ),

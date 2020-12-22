@@ -40,11 +40,10 @@ public class FlutterGoogleMessageApiPlugin
   }
 
   private void initGoogleApiClient() {
-    mApiClient = new GoogleApiClient.Builder(this.context).addApi(Wearable.API).addConnectionCallbacks(this).build();
-
-    showToast("initializing");
+    mApiClient = new GoogleApiClient.Builder(this.context).addApi(Wearable.API).addConnectionCallbacks(this).build(); 
     if (mApiClient != null && !(mApiClient.isConnected() || mApiClient.isConnecting()))
       mApiClient.connect();
+    channel.invokeMethod("onInit",null,null);
   }
 
   private void showToast(String msg) {
@@ -70,13 +69,13 @@ public class FlutterGoogleMessageApiPlugin
   @Override
   public void onMessageReceived(final MessageEvent messageEvent) {
     if (messageEvent.getPath().equalsIgnoreCase(WEAR_MESSAGE_PATH)) {
-      showToast(new String(messageEvent.getData()));
+      channel.invokeMethod("onMessageReceived",new String(messageEvent.getData()),null);
     }
   }
 
   @Override
   public void onConnected(Bundle bundle) {
-    showToast("connected");
+    channel.invokeMethod("onConnected",null,null);
     Wearable.MessageApi.addListener(mApiClient, this);
   }
 
@@ -93,8 +92,7 @@ public class FlutterGoogleMessageApiPlugin
     } else if (call.method.equals("sendMessage")) {
       final String msg = call.argument("message");
       sendMessage(WEAR_MESSAGE_PATH, msg);
-      result.success(null);
-      showToast("sent message");
+      result.success(null); 
     } else {
       result.notImplemented();
     }
@@ -109,6 +107,6 @@ public class FlutterGoogleMessageApiPlugin
 
   @Override
   public void onConnectionSuspended(int i) {
-    showToast("suspended");
+    channel.invokeMethod("onSuspended",null,null);
   }
 }
